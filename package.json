@@ -17,5 +17,9 @@
     "rsa"
   ],
   "author": "Jared Forsyth",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "step": "0.0.5",
+    "crypto": "0.0.3"
+  }
 }
