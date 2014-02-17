@@ -1,6 +1,8 @@
 var crypto = require('crypto')
   , fs = require('fs')
+  , os = require('os')
   , spawn = require('child_process').spawn
+  , pathJoin = require('path').join
   , Step = require('step')
 
 /*
@@ -24,7 +26,7 @@ module.exports = function (comment, path, callback) {
     readfiles = true
     random_str = crypto.randomBytes(16).toString('hex');
     callback = path
-    path = '/tmp/' + random_str
+    path = pathJoin(os.tmpdir(), random_str);
   }
 
   var cmd = "ssh-keygen";
