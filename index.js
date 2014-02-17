@@ -30,7 +30,7 @@ module.exports = function (comment, path, callback) {
   }
 
   var cmd = "ssh-keygen";
-  var args = ["-t", "dsa", "-N", "", "-C", comment,  "-f", path];
+  var args = ["-t", "dsa", "-N", "''", "-C", comment,  "-f", path];
   Step(
     function stepOne() {
       try {
