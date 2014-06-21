@@ -30,7 +30,13 @@ module.exports = function (comment, path, callback) {
   }
 
   var cmd = "ssh-keygen";
-  var args = ["-t", "dsa", "-N", "", "-C", comment,  "-f", path];
+  var args = ["-t", "dsa", "-N"]
+  if (process.platform === 'win32') {
+    args.push("''")
+  } else {
+    args.push("")
+  }
+  args.push("-C", comment,  "-f", path);
   Step(
     function stepOne() {
       try {
@@ -43,7 +49,16 @@ module.exports = function (comment, path, callback) {
     function stepTwo() {
       var next = this
 
-      spawn(cmd, args).on("exit", function(code) {
+      var proc = spawn(cmd, args)
+      proc.stdout.on('data', function (data) {
+        console.debug('stdout: ' + data)
+      })
+
+      proc.stderr.on('data', function (data) {
+        console.log('stderr: ' + data)
+      })
+
+      proc.on("exit", function(code) {
         if (readfiles) return next(code)
         // if we're not reading the files, we're done
         callback(code && new Error('failed to generate keypair'));
