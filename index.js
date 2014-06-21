@@ -48,16 +48,7 @@ module.exports = function (comment, path, callback) {
     function stepTwo() {
       var next = this
 
-      var proc = spawn(cmd, args)
-      proc.stdout.on('data', function (data) {
-        console.debug('stdout: ' + data)
-      })
-
-      proc.stderr.on('data', function (data) {
-        console.debug('stderr: ' + data)
-      })
-
-      proc.on("exit", function(code) {
+      spawn(cmd, args).on("exit", function(code) {
         if (readfiles) return next(code)
         // if we're not reading the files, we're done
         callback(code && new Error('failed to generate keypair'));
