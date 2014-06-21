@@ -55,7 +55,7 @@ module.exports = function (comment, path, callback) {
       })
 
       proc.stderr.on('data', function (data) {
-        console.log('stderr: ' + data)
+        console.debug('stderr: ' + data)
       })
 
       proc.on("exit", function(code) {
