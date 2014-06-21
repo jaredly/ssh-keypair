@@ -3,7 +3,7 @@ var crypto = require('crypto')
   , spawn = require('child_process').spawn
   , Step = require('step')
   , pathJoin = require('path').join
-  , os = require(os)
+  , os = require('os')
 
 /*
  * keygen(comment, path, callback) or keygen(comment, callback)
