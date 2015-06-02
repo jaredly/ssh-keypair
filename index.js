@@ -30,7 +30,7 @@ module.exports = function (comment, path, callback) {
   }
 
   var cmd = "ssh-keygen";
-  var args = ["-t", "dsa", "-C", comment, "-f", path, "-N"]
+  var args = ["-C", comment, "-f", path, "-N"]
   if (process.platform === 'win32') {
     args.push("''")
   } else {
