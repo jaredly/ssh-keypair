@@ -6,38 +6,45 @@ var crypto = require('crypto'),
     os = require('os');
 
 /*
- * keygen(comment, callback, options)
+ * keygen(comment, options, callback)
  *
  * Fork a child process to run ssh-keygen and generate a DSA SSH Key Pair
  * with no passphrase. Does not return the contents of the keys, leaves them
  * on the filesystem.
  *
  * <comment> The comment to put in the public key
- * <callback> function(exitcode) or function(err, privkey, pubkey) if no path is given
- * <options> Object specifying options for ssh-key, fields:
+ * <options> String of output path, or object with these possible fields:
  *     <path> Base output file path. Pubkey will be path + ".pub". If not
  *            specified, a tmp file will be used, and callback will be called
  *            with (err, privkey, pubkey)j
  *     <type> The type of key to create (default "rsa")
+ * <callback> function(exitcode) or function(err, privkey, pubkey) if no path is given
  */
-module.exports = function (comment, callback, options) {
+module.exports = function (comment, options, callback) {
   var readfiles = false,
       random_str,
       path,
       type = 'rsa';
 
-  if (typeof options !== 'undefined') {
+  if (typeof options === "function" && arguments.length === 2) {
+    // No third argument, default options
+    callback = options;
+    readfiles = true;
+    random_str = crypto.randomBytes(16).toString('hex');
+    path = pathJoin(os.tmpdir(), random_str);
+  } else if (typeof options === "string") {
+    // Second argument is string, assume it specifies path
+    path = options;
+  } else if (typeof options === 'object') {
+    // Second argument is object, pull out fields
     if (typeof options.type === 'string') {
       type = options.type;
     }
     if (typeof options.path === 'string') {
       path = options.path;
     }
-  }
-  if (typeof path !== 'string') {
-    readfiles = true;
-    random_str = crypto.randomBytes(16).toString('hex');
-    path = pathJoin(os.tmpdir(), random_str);
+  } else {
+    return new Error('Bad arguments, see README');
   }
 
   var cmd = "ssh-keygen";
